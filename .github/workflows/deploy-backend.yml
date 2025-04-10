@@ -1,0 +1,35 @@
+name: Deploy Backend
+
+on:
+  push:
+    branches:
+      - main # This means the workflow will run when you push code to the 'main' branch
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest # This tells GitHub to use a Linux computer to run the workflow
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3 # This step gets your code from GitHub
+
+      - name: Set up Python
+        uses: actions/setup-python@v4 # This step sets up Python for your Lambda function
+        with:
+          python-version: '3.13' # Or whatever python version you are using
+
+      - name: Install dependencies
+        run: pip install -r AWS-SAM/HelloWorldFunction/requirements.txt # This step installs the Python libraries your Lambda function needs
+
+      - name: Run tests
+        run: pytest tests/ # This step runs your Python tests (if you have them)
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1 # Change this to your AWS region
+
+      - name: Deploy SAM application
+        run: sam deploy --no-confirm --stack-name cloud-resume-backend --capabilities CAPABILITY_IAM # This step deploys your code to AWS using SAM
