@@ -19,7 +19,7 @@ jobs:
           python-version: '3.13' # Or whatever python version you are using
 
       - name: Install dependencies
-        run: pip install -r AWS-SAM/HelloWorldFunction # This step installs the Python libraries your Lambda function needs
+        run: pip install -r hello_world/requirements.txt# This step installs the Python libraries your Lambda function needs
 
       - name: Run tests
         run: pytest tests/ # This step runs your Python tests (if you have them)
